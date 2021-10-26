@@ -1,0 +1,95 @@
+diff -crB NetFPGA-SUME-orig/Makefile NetFPGA-SUME-live/Makefile
+*** NetFPGA-SUME-orig/Makefile	2021-09-21 20:18:44.882928898 +0100
+--- NetFPGA-SUME-live/Makefile	2021-09-21 20:19:01.306928750 +0100
+***************
+*** 97,115 ****
+  	make -C $(LIB_HW_DIR)/std/cores/nf_10ge_interface_shared_v1_0_0/
+  	make -C $(LIB_HW_DIR)/std/cores/nf_10ge_interface_v1_0_0/
+  	make -C $(LIB_HW_DIR)/std/cores/nic_output_queues_v1_0_0/
+! #	make -C $(LIB_HW_DIR)/contrib/cores/nfmac_10ge_interface_shared_v1_0_0/
+! #	make -C $(LIB_HW_DIR)/contrib/cores/nfmac_10ge_interface_v1_0_0/
+! #	make -C $(LIB_HW_DIR)/contrib/cores/nfmac_10ge_interface_shared_v1_0_0/
+! #	make -C $(LIB_HW_DIR)/contrib/cores/nfmac_10ge_interface_v1_0_0/
+! #	make -C $(LIB_HW_DIR)/contrib/cores/vlan_adder_v1_0_0/
+! #	make -C $(LIB_HW_DIR)/contrib/cores/vlan_remover_v1_00/
+! #	make -C $(LIB_HW_DIR)/contrib/cores/nic_output_port_lookup_v4_0_0/
+! #	make -C $(LIB_HW_DIR)/contrib/cores/db_v1_0_1/
+! #	make -C $(LIB_HW_DIR)/contrib/cores/div_v1_0_0/
+! #	make -C $(LIB_HW_DIR)/contrib/cores/nf_sume_pktgen_v1_0_0/
+! #	make -C $(LIB_HW_DIR)/contrib/cores/input_arbiter_6in_v1_0_0/
+! #	make -C $(LIB_HW_DIR)/contrib/cores/nf_naudit_dma_v1_0_0/
+! #	make -C $(LIB_HW_DIR)/contrib/cores/emudns_output_port_lookup_v1_0_0/
+  	@echo "/////////////////////////////////////////";
+  	@echo "//\tLibrary cores created.";
+  	@echo "/////////////////////////////////////////";
+--- 97,105 ----
+  	make -C $(LIB_HW_DIR)/std/cores/nf_10ge_interface_shared_v1_0_0/
+  	make -C $(LIB_HW_DIR)/std/cores/nf_10ge_interface_v1_0_0/
+  	make -C $(LIB_HW_DIR)/std/cores/nic_output_queues_v1_0_0/
+! 	make -C $(LIB_HW_DIR)/contrib/cores/delay_v1_0_0/
+! 	make -C $(LIB_HW_DIR)/contrib/cores/rate_limiter_v1_0_0/
+! 	make -C $(LIB_HW_DIR)/contrib/cores/stats_v1_0_0/
+  	@echo "/////////////////////////////////////////";
+  	@echo "//\tLibrary cores created.";
+  	@echo "/////////////////////////////////////////";
+diff -crB NetFPGA-SUME-orig/tools/scripts/nf_test.py NetFPGA-SUME-live/tools/scripts/nf_test.py
+*** NetFPGA-SUME-orig/tools/scripts/nf_test.py	2021-09-21 20:18:44.882928898 +0100
+--- NetFPGA-SUME-live/tools/scripts/nf_test.py	2021-09-21 20:19:01.306928750 +0100
+***************
+*** 73,79 ****
+  run = 'run.py'
+  commonDir = 'common'
+  globalDir = 'global'
+! projectRoot = 'projects'
+  testRoot = 'test'
+  
+  
+--- 73,79 ----
+  run = 'run.py'
+  commonDir = 'common'
+  globalDir = 'global'
+! projectRoot = 'contrib-projects'
+  testRoot = 'test'
+  
+  
+diff -crB NetFPGA-SUME-orig/tools/settings.sh NetFPGA-SUME-live/tools/settings.sh
+*** NetFPGA-SUME-orig/tools/settings.sh	2021-09-21 20:18:44.882928898 +0100
+--- NetFPGA-SUME-live/tools/settings.sh	2021-09-21 20:21:26.794927432 +0100
+***************
+*** 28,43 ****
+  # @NETFPGA_LICENSE_HEADER_END@
+  #
+  
+! export SUME_FOLDER=${HOME}/NetFPGA-SUME-live
+  export XILINX_PATH=/opt/Xilinx/Vivado/2020.2
+  export VITIS_PATH=/opt/Xilinx/Vitis/2020.2
+! export NF_PROJECT_NAME=reference_switch
+! export PROJECTS=${SUME_FOLDER}/projects
+  export CONTRIB_PROJECTS=${SUME_FOLDER}/contrib-projects
+  export IP_FOLDER=${SUME_FOLDER}/lib/hw/std/cores
+  export CONSTRAINTS=${SUME_FOLDER}/lib/hw/std/constraints
+  export XILINX_IP_FOLDER=${SUME_FOLDER}/lib/hw/xilinx/cores
+! export NF_DESIGN_DIR=${SUME_FOLDER}/projects/${NF_PROJECT_NAME}
+  export NF_WORK_DIR=/tmp/${USER}
+  export PYTHONPATH=.:${SUME_FOLDER}/tools/scripts/:${NF_DESIGN_DIR}/lib/Python:${SUME_FOLDER}/tools/scripts/NFTest
+  export DRIVER_NAME=sume_riffa_v1_0_0
+--- 28,44 ----
+  # @NETFPGA_LICENSE_HEADER_END@
+  #
+  
+! export LOCAL_DIR=${PWD}
+! export SUME_FOLDER=${LOCAL_DIR}/NetFPGA-SUME-live
+  export XILINX_PATH=/opt/Xilinx/Vivado/2020.2
+  export VITIS_PATH=/opt/Xilinx/Vitis/2020.2
+! export NF_PROJECT_NAME=nrg
+! export PROJECTS=${SUME_FOLDER}/contrib-projects
+  export CONTRIB_PROJECTS=${SUME_FOLDER}/contrib-projects
+  export IP_FOLDER=${SUME_FOLDER}/lib/hw/std/cores
+  export CONSTRAINTS=${SUME_FOLDER}/lib/hw/std/constraints
+  export XILINX_IP_FOLDER=${SUME_FOLDER}/lib/hw/xilinx/cores
+! export NF_DESIGN_DIR=${SUME_FOLDER}/contrib-projects/${NF_PROJECT_NAME}
+  export NF_WORK_DIR=/tmp/${USER}
+  export PYTHONPATH=.:${SUME_FOLDER}/tools/scripts/:${NF_DESIGN_DIR}/lib/Python:${SUME_FOLDER}/tools/scripts/NFTest
+  export DRIVER_NAME=sume_riffa_v1_0_0
+Only in NetFPGA-SUME-live/tools: settings.sh.orig
+Only in NetFPGA-SUME-live/tools: settings.sh.rej
